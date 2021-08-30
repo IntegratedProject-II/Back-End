@@ -1,0 +1,69 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model krathong {
+    kt_id    Int       @id @default(autoincrement())
+    kt_name  String
+    amount   Int
+    kt_image String
+    detail   String
+    t_id     Int
+    type     type?     @relation(fields: [t_id], references: [t_id])
+    history  history[]
+
+}
+
+model type {
+    t_id    Int        @id @default(autoincrement())
+    type    String
+    krthong krathong[]
+}
+
+model history {
+    h_id     Int       @id @default(autoincrement())
+    h_date   DateTime
+    wish     String
+    kt_id    Int
+    user_id  Int
+    p_id     Int
+    krathong krathong? @relation(fields: [kt_id], references: [kt_id])
+    person   person?   @relation(fields: [user_id], references: [user_id])
+    place    place?    @relation(fields: [p_id], references: [p_id])
+
+}
+
+model person {
+    user_id  Int       @id @default(autoincrement())
+    fname    String
+    lname    String
+    username String
+    password String
+    role     String
+    email    String
+    country  String
+    phone    Int
+    id_card  Int
+    history  history[]
+}
+
+model place {
+    p_id            Int         @id @default(autoincrement())
+    p_name          String
+    p_image         String
+    history         history[]
+    tp_id Int
+    place_type      place_type? @relation(fields: [tp_id], references: [tp_id])
+    
+}
+
+model place_type {
+    tp_id   Int     @id @default(autoincrement())
+    tp_name String
+    place   place[]
+}
