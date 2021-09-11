@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = [ "referentialActions" ]
 }
 
 datasource db {
@@ -20,9 +21,9 @@ model history {
   p_id     Int
   kt_id    Int?
   user_id  Int?
-  krathong krathong? @relation(fields: [kt_id], references: [kt_id])
-  place    place     @relation(fields: [p_id], references: [p_id])
-  person   person?   @relation(fields: [user_id], references: [user_id])
+  krathong krathong? @relation(fields: [kt_id], references: [kt_id], onDelete: Cascade)
+  place    place     @relation(fields: [p_id], references: [p_id], onDelete: Cascade)
+  person   person?   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@index([kt_id], name: "history_krathong_fk")
   @@index([user_id], name: "history_person_fk")
@@ -36,7 +37,7 @@ model krathong {
   kt_image String?   @db.VarChar(200)
   detail   String?   @db.VarChar(4000)
   t_id     Int
-  kt_type  kt_type   @relation(fields: [t_id], references: [t_id])
+  kt_type  kt_type   @relation(fields: [t_id], references: [t_id], onDelete: Cascade)
   history  history[]
 
   @@index([t_id], name: "krathong_kt_type_fk")
@@ -53,14 +54,14 @@ model person {
   fname       String?     @db.VarChar(100)
   lname       String?     @db.VarChar(100)
   username    String?     @db.VarChar(50)
-  password    String?     @db.VarChar(20)
+  password    String?     @db.VarChar(200)
   email       String?     @db.VarChar(200)
   id_card     String?     @db.VarChar(20)
   phone       String?     @db.VarChar(10)
   role_id     Int
   ct_id       Int
-  country     country     @relation(fields: [ct_id], references: [ct_id])
-  person_role person_role @relation(fields: [role_id], references: [role_id])
+  country     country     @relation(fields: [ct_id], references: [ct_id], onDelete: Cascade)
+  person_role person_role @relation(fields: [role_id], references: [role_id], onDelete: Cascade)
   history     history[]
 
   @@index([ct_id], name: "person_country_fk")
@@ -78,7 +79,7 @@ model place {
   p_name     String?    @db.VarChar(100)
   p_image    String?    @db.VarChar(200)
   tp_id      Int
-  place_type place_type @relation(fields: [tp_id], references: [tp_id])
+  place_type place_type @relation(fields: [tp_id], references: [tp_id], onDelete: Cascade)
   history    history[]
 
   @@index([tp_id], name: "place_place_type_fk")

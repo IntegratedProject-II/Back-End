@@ -12,5 +12,15 @@ router.get("/getPlace", async (req, res) => {
         return res.send({ data: result })
 })
 
+router.delete("/delete/:id", async (req, res) => {
+    let placeId = Number(req.params.id)
+    let result = await place.delete({
+        where: {
+            p_id: placeId 
+        }
+    })
+        console.log(result)
+        return res.send({ status: "Delete Successful" })
+})
 
 module.exports = router

@@ -11,4 +11,16 @@ router.get("/getHistory", async (req, res) => {
         }
         return res.send({ data: result })
 })
+
+router.delete("/delete/:id", async (req, res) => {
+    let historyId = Number(req.params.id)
+    let result = await history.delete({
+        where: {
+            h_id: historyId
+        }
+    })
+        console.log(result)
+        return res.send({ status: "Delete Successful" })
+})
+
 module.exports = router

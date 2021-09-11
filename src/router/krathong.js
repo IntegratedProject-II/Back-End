@@ -3,7 +3,6 @@ const express = require("express")
 const router = require('express').Router()
 const { PrismaClient } = require('@prisma/client')
 const kt = new PrismaClient().krathong
-const his = new PrismaClient().history
 
 router.get("/getKrathong", async (req, res) => {
     let result = await kt.findMany()
@@ -15,12 +14,7 @@ router.get("/getKrathong", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
     let ktId = Number(req.params.id)
-    let results = await his.deleteMany({
-        where: {
-            kt_id: ktId
-        }
-    })
-    let result = await kt.deleteMany({
+    let result = await kt.delete({
         where: {
             kt_id: ktId
         }
