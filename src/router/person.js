@@ -62,5 +62,29 @@ router.post("/register", async (req, res) => {
     return res.send({ msg: "Create User Successfully", data: result })
 })
 
+router.post("/login", async (req, res) => {
+    let { username, password } = req.body
+
+    username = username.toLowerCase()
+
+    let findedUser = await person.findFirst({
+        where: {
+            username: username
+        }
+    })
+
+    if (!findedUser) {
+        return res.status(400).send({ msg: "Can't find this user" })
+    }
+
+    const validPassword = await bcrypt.compare(password, findedUser.password)
+
+    if (!validPassword) {
+        return res.status(400).send({ msg: "Invalid Password" })
+    }
+
+    const token = jwt.sign(findedUser.user_id, process.env.TOKEN, { expiresIn: "1m" })
+    return res.header("pj-token", token).send({ token: token }) 
+})
 
 module.exports = router

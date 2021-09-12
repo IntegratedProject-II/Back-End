@@ -23,4 +23,16 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
 })
 
+router.post("/addHistory", async (req, res) => {
+    let { h_date, wish, p_id, kt_id, user_id } = req.body
+
+    if (!(h_date || wish || p_id || kt_id || user_id)) {
+        return res.send({ status: "Not have data" })
+    }
+    await history.createMany({
+        data: req.body
+    })
+    return res.send({ status: "Create success" })
+})
+
 module.exports = router

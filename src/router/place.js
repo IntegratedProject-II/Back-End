@@ -23,4 +23,16 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
 })
 
+router.post("/addPlace", async (req, res) => {
+    let { p_name, p_image, tp_id } = req.body
+
+    if (!(p_name || p_image || tp_id )) {
+        return res.send({ status: "Not have data" })
+    }
+    await place.createMany({
+        data: req.body
+    })
+    return res.send({ status: "Create success" })
+})
+
 module.exports = router

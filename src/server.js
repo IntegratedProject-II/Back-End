@@ -11,6 +11,7 @@ app.listen(port, () => {
     console.log(`Server running on port: ${port}`)
 })
 
+
 app.use('/api/krathong', require("./router/krathong"))
 app.use('/api/person', require("./router/person"))
 app.use('/api/place', require("./router/place"))
