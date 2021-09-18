@@ -83,8 +83,70 @@ router.post("/login", async (req, res) => {
         return res.status(400).send({ msg: "Invalid Password" })
     }
 
-    const token = jwt.sign(findedUser.user_id, process.env.TOKEN, { expiresIn: "1m" })
-    return res.header("pj-token", token).send({ token: token }) 
+    const token = jwt.sign({ id: findedUser.user_id }, process.env.TOKEN, { expiresIn: "5m" })
+    return res.header("pj-token", token).send({ token: token })
+})
+
+router.put("/editProfile/:id", async (req, res) => {
+    let personId = Number(req.params.id)
+    let { fname, lname, username, email, id_card, phone, role_id, ct_id } = req.body
+
+    let isHave = await person.findUnique({
+        where: {
+            user_id: personId
+        }
+    })
+    if (!(isHave)) {
+        return res.status(404).send(`id ${personId} Can't find your user id`)
+    }
+
+    // console.log(isHave.username)
+    if (!(isHave.username)) {
+        return res.status(404).send(`id ${personId} Not have this username`)
+    }
+    if (role_id == 1) {
+        let updateProfile = await person.update({
+            where: {
+                user_id: personId
+            },
+            data: {
+                fname: fname,
+                lname: lname,
+                username: username,
+                email: email,
+                role_id: role_id,
+                ct_id: ct_id
+            }
+        })
+        // console.log(updateProfile)
+        return res.send({
+            msg: `Update sucessfully`,
+            data: updateProfile
+        })
+    }
+
+    if (role_id == 2) {
+        let updateProfile = await person.update({
+            where: {
+                user_id: personId
+            },
+            data: {
+                fname: fname,
+                lname: lname,
+                username: username,
+                email: email,
+                id_card: id_card,
+                phone: phone,
+                role_id: role_id,
+                ct_id: ct_id
+            }
+        })
+        // console.log(updateProfile)
+        return res.send({
+            msg: `Update sucessfully`,
+            data: updateProfile
+        })
+    }
 })
 
 module.exports = router

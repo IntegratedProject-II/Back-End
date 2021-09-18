@@ -35,21 +35,42 @@ router.post("/addKrathong", async (req, res) => {
     return res.send({ status: "Create success" })
 })
 
-// router.put("/edit/:id", (req, res) => {
-//     let ktId = req.params.id
-//     let { kt_name, amount, kt_image, detail, t_id } = req.body
+router.put("/editKrathong/:id", async (req, res) => {
+    let ktId = Number(req.params.id)
+    let { kt_name, amount, kt_image, detail, t_id } = req.body
 
-//    let result = await kt.findMany({
-//         kt_id: ktId
-//     })
+   let result = await kt.findUnique({
+        where: {
+            kt_id: ktId
+        }
+    })
 
-//     if (err) {
-//         return res.send({ status: "Can't update" })
-//     }
-//     if (result.affectedRows == 0) {
-//         return res.status(400).send({ status: "Don't have any data" })
-//     }
-//     return res.send({ status: "Update Successful" })
-// })
+    if (!(result)) {
+        return res.status(404).send(`id ${ktId} Can't find your krathong id`)
+    } 
+
+    if (!(result.kt_name)) {
+        return res.status(404).send(`id ${ktId} Not have this krathong name`)
+    }
+
+    let updateKrathong = await kt.update({
+        where: {
+            kt_id: ktId
+        },
+        data: {
+            kt_name: kt_name,
+            amount: amount,
+            kt_image: kt_image,
+            detail: detail,
+            t_id: t_id
+        }
+    })
+
+    return res.send({
+        msg: `Update sucessfully`,
+        data: updateKrathong
+    })
+
+})
 
 module.exports = router
