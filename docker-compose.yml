@@ -3,7 +3,7 @@ services:
   backend:
     image: ghcr.io/integratedproject-ii/back-end:main   
     ports: 
-      - "3000:3000"  
+      - "9000:9000"  
 networks:
     default:
         external:
