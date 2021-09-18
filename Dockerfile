@@ -7,6 +7,6 @@ COPY package*.json ./
 RUN npm install
 
 COPY . /usr/src/app
-
+RUN npm run prisma:generate
 EXPOSE 9000
 CMD ["npm","run","start"]
