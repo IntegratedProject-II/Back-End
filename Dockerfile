@@ -2,7 +2,7 @@ FROM node:14
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json ./Docker-back-end
 
 RUN npm install
 
