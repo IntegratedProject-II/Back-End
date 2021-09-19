@@ -9,4 +9,3 @@ networks:
     default:
         external:
             name: loykrathong_network
-~
