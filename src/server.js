@@ -6,7 +6,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-let port = process.env.PORT || 9000
+let port = process.env.PORT || 3000
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`)
 })
@@ -19,3 +19,4 @@ app.use('/api/history', require("./router/history"))
 app.use('/api/country', require("./router/country"))
 app.use('/api/krathongType', require("./router/krathongType"))
 app.use('/api/placeType', require("./router/placeType"))
+app.use('/api/image', require("./router/image"))
