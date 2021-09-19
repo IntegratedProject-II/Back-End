@@ -2,6 +2,9 @@ require("dotenv").config()
 const express = require("express")
 const router = require('express').Router()
 const { PrismaClient } = require('@prisma/client')
+const uploadFile = require("../middlewares/uploadFile")
+const path = require("path")
+const fs = require("fs/promises")
 const kt = new PrismaClient().krathong
 
 router.get("/getKrathong", async (req, res) => {
@@ -14,63 +17,114 @@ router.get("/getKrathong", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
     let ktId = Number(req.params.id)
+
+    let findImage = await kt.findUnique({
+        where: {
+            kt_id: ktId
+        },
+        select: {
+            kt_image: true
+        }
+    })
+    console.log(findImage)
+
+    let imagePath = path.join(__dirname, `../../uploads/${findImage.kt_image}`)
+    await fs.unlink(imagePath)
+    console.log(imagePath)
+
     let result = await kt.delete({
         where: {
             kt_id: ktId
         }
     })
-    console.log(result)
+
+    if (!result) {
+        return res.send({ status: "Can't find your krathong" })
+    }
+    // console.log(result)
     return res.send({ status: "Delete Successful" })
 })
 
-router.post("/addKrathong", async (req, res) => {
-    let { kt_name, amount, kt_image, detail, t_id } = req.body
+router.post("/addKrathong", uploadFile, async (req, res) => {
+    //let { kt_name, amount, kt_image, detail, t_id } = req.body
+    const files = req.files
+    let imageFiles = []
+    let imageName;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.fieldname == "image") {
+            imageFiles.push(file)
+            imageName = imageFiles[0].filename
+        }
 
-    if (!(kt_name || amount || kt_image || detail || t_id)) {
-        return res.send({ status: "Not have data" })
+        if (file.fieldname == "data") {
+            let newKrathong = await fs.readFile(file.path, { encoding: "utf-8" })
+            await fs.unlink(file.path)
+            body = JSON.parse(newKrathong)
+            if (!body) {
+                return res.status(400).send({ status: "Please add fill data" })
+            }
+
+            body.kt_image = imageName
+
+            let result = await kt.create({
+                data: body
+            })
+
+            console.log(result)
+            return res.send({ status: `Upload sucessfully` })
+        }
+
     }
-    await kt.createMany({
-        data: req.body
-    })
-    return res.send({ status: "Create success" })
 })
 
-router.put("/editKrathong/:id", async (req, res) => {
+router.put("/editKrathong/:id", uploadFile, async (req, res) => {
     let ktId = Number(req.params.id)
-    let { kt_name, amount, kt_image, detail, t_id } = req.body
+    // let { kt_name, amount, kt_image, detail, t_id } = req.body
 
-   let result = await kt.findUnique({
-        where: {
-            kt_id: ktId
+    const files = req.files
+    let imageFiles = []
+    let imageName;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.fieldname == "image") {
+            imageFiles.push(file)
+            imageName = imageFiles[i].filename
         }
-    })
+        if (file.fieldname == "data") {
+            let findImage = await kt.findUnique({
+                where: {
+                    kt_id: ktId
+                },
+                select: {
+                    kt_image: true
+                }
+            })
 
-    if (!(result)) {
-        return res.status(404).send(`id ${ktId} Can't find your krathong id`)
-    } 
+            let imagePath = path.join(__dirname, `../../uploads/${findImage.kt_image}`)
+            await fs.unlink(imagePath)
 
-    if (!(result.kt_name)) {
-        return res.status(404).send(`id ${ktId} Not have this krathong name`)
+            let editKrathong = await fs.readFile(file.path, { encoding: "utf-8" })
+
+            await fs.unlink(file.path)
+            body = JSON.parse(editKrathong)
+            if (!body) {
+                return res.status(400).send({ status: "Please add data" })
+            }
+
+            body.kt_image = imageName
+
+            let updateKrathong = await kt.update({
+                where: {
+                    kt_id: ktId
+                },
+                data: body
+            })
+
+            return res.send({ status: `Update sucessfully`, data: updateKrathong})
+        }
+
     }
-
-    let updateKrathong = await kt.update({
-        where: {
-            kt_id: ktId
-        },
-        data: {
-            kt_name: kt_name,
-            amount: amount,
-            kt_image: kt_image,
-            detail: detail,
-            t_id: t_id
-        }
-    })
-
-    return res.send({
-        msg: `Update sucessfully`,
-        data: updateKrathong
-    })
-
 })
 
 module.exports = router
