@@ -3,6 +3,7 @@ const express = require("express")
 const router = require('express').Router()
 const { PrismaClient } = require('@prisma/client')
 const uploadFile = require("../middlewares/uploadFile")
+const path = require("path")
 const fs = require("fs/promises")
 const place = new PrismaClient().place
 
@@ -29,7 +30,7 @@ router.delete("/delete/:id", async (req, res) => {
     let imagePath = path.join(__dirname, `../../uploads/${findImage.p_image}`)
     await fs.unlink(imagePath)
 
-    let result = await kt.delete({
+    let result = await place.delete({
         where: {
             p_id: placeId
         }
@@ -42,7 +43,7 @@ router.delete("/delete/:id", async (req, res) => {
     return res.send({ status: "Delete Successful" })
 })
 
-router.post("/addPlace", uploadFile, async (req, res) => { c
+router.post("/addPlace", uploadFile, async (req, res) => {
     const files = req.files
     let imageFiles = []
     let imageName;
@@ -60,7 +61,7 @@ router.post("/addPlace", uploadFile, async (req, res) => { c
                 return res.status(400).send({ status: "Please add fill data" })
             }
 
-            body.kt_image = imageName
+            body.p_image = imageName
 
             let result = await place.create({
                 data: body
@@ -131,7 +132,7 @@ router.put("/editPlace/:id", uploadFile, async (req, res) => {
                 }
             })
 
-            let imagePath = path.join(__dirname, `../../uplaods/${findImage.p_image}`)
+            let imagePath = path.join(__dirname, `../../uploads/${findImage.p_image}`)
             await fs.unlink(imagePath)
 
             let editPlace = await fs.readFile(file.path, { encoding: "utf-8" })

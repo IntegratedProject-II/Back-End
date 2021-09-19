@@ -3,6 +3,7 @@ const express = require("express")
 const router = require('express').Router()
 const { PrismaClient } = require('@prisma/client')
 const uploadFile = require("../middlewares/uploadFile")
+const path = require("path")
 const fs = require("fs/promises")
 const kt = new PrismaClient().krathong
 
@@ -53,8 +54,9 @@ router.post("/addKrathong", uploadFile, async (req, res) => {
         const file = files[i];
         if (file.fieldname == "image") {
             imageFiles.push(file)
-            imageName = imageFiles[i].filename
+            imageName = imageFiles[0].filename
         }
+
         if (file.fieldname == "data") {
             let newKrathong = await fs.readFile(file.path, { encoding: "utf-8" })
             await fs.unlink(file.path)
@@ -99,7 +101,7 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                 }
             })
 
-            let imagePath = path.join(__dirname, `../../uplaods/${findImage.kt_image}`)
+            let imagePath = path.join(__dirname, `../../uploads/${findImage.kt_image}`)
             await fs.unlink(imagePath)
 
             let editKrathong = await fs.readFile(file.path, { encoding: "utf-8" })
