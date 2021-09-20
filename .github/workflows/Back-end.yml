@@ -28,6 +28,7 @@ jobs:
         touch .env
         echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
         echo TOKEN=${{ secrets.TOKEN }} >> .env
+        ls -la
          
     - name: Build image and push Dockerfile
       uses: docker/build-push-action@v2
