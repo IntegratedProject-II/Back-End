@@ -23,10 +23,22 @@ jobs:
          username: ${{ github.repository_owner }}
          password: ${{ secrets.TOKEN_GITHUB_LOYKRATHONG }}
          
-    - name: Create env file
-      run: |
+#     - name: Create env file
+#       run: |
+#           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+#           echo TOKEN=${{ secrets.TOKEN }} >> .env
+
+    - name: Create file env
+      uses: appleboy/ssh-action@master
+      with:
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         password: ${{ secrets.PASSWORD }}
+         script: |
+          touch .env
           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
           echo TOKEN=${{ secrets.TOKEN }} >> .env
+           
          
     - name: Build image and push Dockerfile
       uses: docker/build-push-action@v2
