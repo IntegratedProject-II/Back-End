@@ -62,7 +62,7 @@ router.post("/register", async (req, res) => {
     return res.send({ msg: "Create User Successfully", data: result })
 })
 
-router.post("/login", async (req, res) => {
+router.post("/signin", async (req, res) => {
     let { username, password } = req.body
 
     username = username.toLowerCase()
