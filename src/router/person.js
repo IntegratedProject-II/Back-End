@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt')
 const verifyToken = require("../middlewares/auth")
 const person = new PrismaClient().person
+const personRole = new PrismaClient().person_role
 
 router.get("/getPerson", async (req, res) => {
     let result = await person.findMany()
@@ -65,6 +66,15 @@ router.post("/signin", async (req, res) => {
 
     username = username.toLowerCase()
 
+    let role_id = await person.findFirst({
+        where: {
+            username: username
+        },
+        select: {
+            role_id: true
+        }
+    })
+    
     let findedUser = await person.findFirst({
         where: {
             username: username
@@ -82,7 +92,7 @@ router.post("/signin", async (req, res) => {
     }
 
     const token = jwt.sign({ id: findedUser.user_id }, process.env.TOKEN, { expiresIn: "5m" })
-    return res.header("pj-token", token).send({ token: token })
+    return res.header("pj-token", token).send({ token: token, role: role_id})
 })
 
 router.put("/editProfile/:id", async (req, res) => {
