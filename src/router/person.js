@@ -16,19 +16,19 @@ router.get("/getPerson", async (req, res) => {
 })
 
 router.post("/register", async (req, res) => {
-    let { fname, lname, username, password, email, id_card, phone, role_id, ct_id } = req.body
-    if (!role_id) {
-        return res.status(400).send({ msg: "Please input information to fill" })
-    }
-    if (role_id == 1) {
-        if (!(fname && lname && username && password && email && role_id && ct_id)) {
-            return res.status(400).send({ msg: "Please input information to fill" })
-        }
-    } else if (role_id == 2) {
-        if (!(fname && lname && username && password && email && id_card && phone && role_id && ct_id)) {
+    let { fname, lname, username, password, email, role_id, ct_id } = req.body
+
+    if (role_id = 1){
+        if (!(fname && lname && username && password && email && ct_id)) {
             return res.status(400).send({ msg: "Please input information to fill" })
         }
     }
+        
+    // } else if (role_id == 2) {
+    //     if (!(fname && lname && username && password && email && id_card && phone && role_id && ct_id)) {
+    //         return res.status(400).send({ msg: "Please input information to fill" })
+    //     }
+    // }
 
 
     username = username.toLowerCase()
@@ -50,19 +50,17 @@ router.post("/register", async (req, res) => {
             fname: fname,
             lname: lname,
             email: email,
-            id_card: id_card,
-            phone: phone,
-            role_id: role_id,
-            ct_id: ct_id,
             username: username,
-            password: hashedPassword
+            password: hashedPassword,
+            role_id: role_id,
+            ct_id: ct_id
         }
     })
 
     return res.send({ msg: "Create User Successfully", data: result })
 })
 
-router.post("/login", async (req, res) => {
+router.post("/signin", async (req, res) => {
     let { username, password } = req.body
 
     username = username.toLowerCase()
