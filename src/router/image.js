@@ -8,6 +8,12 @@ const path = require("path")
 const kt = new PrismaClient().krathong
 const place = new PrismaClient().place
 
+router.get("/getKrathongImage", async (req, res) => {
+    const image = req.params
+    const fileDir = path.join(__dirname, `../../uploads/${image}`)
+    res.sendFile(fileDir)
+})
+
 router.get("/getKrathongImage/:name", async (req, res) => {
     const image = req.params.name
     const fileDir = path.join(__dirname, `../../uploads/${image}`)
