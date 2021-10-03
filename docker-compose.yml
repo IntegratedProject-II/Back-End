@@ -3,7 +3,10 @@ services:
   backend:
     image: ghcr.io/integratedproject-ii/back-end:main
     command: sh -c "npx prisma db pull && npx prisma generate && npm start"
+    volumes:
+      - ~/backend_photo:/usr/src/app/uploads
 networks:
     default:
         external:
             name: loykrathong_network
+
