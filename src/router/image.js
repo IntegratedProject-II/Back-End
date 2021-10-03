@@ -31,6 +31,29 @@ router.get("/krathongImage/:id", async (req, res) => {
     res.sendFile(fileDir)
 })
 
+router.get("/placeImage/:id", async (req, res) => {
+    let placeId = Number(req.params.id) 
+    if (placeId == undefined) {
+        return res.status(400).send({ status: "Don't have any data" })
+    }
+
+    let placeImage = await place.findUnique({
+        where: {
+            p_id: placeId
+        },
+        select: {
+            p_image: true
+        }
+    })
+
+    if (!placeImage) {
+        return res.send({ status: `This product image is not found` })
+    }
+
+    const fileDir = path.join(__dirname, `../../uploads/${placeImage.p_image}`)
+    res.sendFile(fileDir)
+})
+
 // router.get("/getKrathongImage/:name", async (req, res) => {
 //     const image = req.params.name
 //     const fileDir = path.join(__dirname, `../../uploads/${image}`)
