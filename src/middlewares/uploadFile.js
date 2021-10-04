@@ -41,6 +41,7 @@ module.exports = (req, res, next) => {
       throw err
     }
     if (!req.files) {
+      console.log(req.files)
       return res.status(400).send({ msg: "Please send any file" })
     }
     next()

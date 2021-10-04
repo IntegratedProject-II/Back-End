@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
         }
     })
     if (findedUser) {
-        return res.status(400).send({ msg: "Username is already exists" })
+        return res.status(403).send({ msg: "Username is already exists" })
     }
 
     const saltRound = await bcrypt.genSalt(10)
@@ -82,13 +82,13 @@ router.post("/signin", async (req, res) => {
     })
 
     if (!findedUser) {
-        return res.status(400).send({ msg: "Can't find this user" })
+        return res.status(401).send({ msg: "Can't find this user" })
     }
 
     const validPassword = await bcrypt.compare(password, findedUser.password)
 
     if (!validPassword) {
-        return res.status(400).send({ msg: "Invalid Password" })
+        return res.status(401).send({ msg: "Invalid Password" })
     }
 
     const token = jwt.sign({ id: findedUser.user_id }, process.env.TOKEN, { expiresIn: "5m" })
