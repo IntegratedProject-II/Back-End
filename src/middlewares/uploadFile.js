@@ -17,7 +17,7 @@ let changeNameOfFile = (file) => {
 }
 
 function checkFileType(file, cb) {
-  const filetypes = /jpeg|jpg|png|gif|json/;
+  const filetypes = /jpeg|jpg|png|gif|svg|json/;
   const mimetype = filetypes.test(file.mimetype)
 
   if (mimetype) {
