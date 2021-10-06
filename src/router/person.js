@@ -20,7 +20,7 @@ router.get("/getPerson", async (req, res) => {
 router.post("/register", async (req, res) => {
     let { fname, lname, username, password, email, role_id, ct_id } = req.body
 
-    if (role_id = 1){
+    if (role_id == 1){
         if (!(fname && lname && username && password && email && ct_id)) {
             return res.status(400).send({ msg: "Please input information to fill" })
         }
@@ -168,6 +168,5 @@ router.put("/editProfile/:id", async (req, res) => {
     }
 })
 
-
-
 module.exports = router
+
