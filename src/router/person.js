@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 const verifyToken = require("../middlewares/auth")
 const person = new PrismaClient().person
 const personRole = new PrismaClient().person_role
+const tk = new PrismaClient().token
 
 router.get("/getPerson", async (req, res) => {
     let result = await person.findMany()
@@ -95,6 +96,16 @@ router.post("/signin", async (req, res) => {
     return res.header("pj-token", token).send({ token: token, role: role_id})
 })
 
+// router.delete("/signout", async, (req, res) => {
+//     let signOut = await tk.deleteMany({
+//         where: {
+//             token: req.token
+//         }
+//     })
+
+//     return res.status(200).send({ msg: "Sign out already!!" })
+// })
+
 router.put("/editProfile/:id", async (req, res) => {
     let personId = Number(req.params.id)
     let { fname, lname, username, email, id_card, phone, role_id, ct_id } = req.body
@@ -158,3 +169,4 @@ router.put("/editProfile/:id", async (req, res) => {
 })
 
 module.exports = router
+
