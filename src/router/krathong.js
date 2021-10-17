@@ -15,6 +15,30 @@ router.get("/getKrathong", async (req, res) => {
     return res.send({ data: result })
 })
 
+router.get("/getKrathong/:id", async (req, res) => {
+    let ktId = Number(req.params.id) 
+    if (ktId == undefined) {
+        return res.status(400).send({ status: "Don't have any data" })
+    }
+
+    let ktData = await kt.findUnique({
+        where: {
+            kt_id: ktId
+        },
+        select: {
+            kt_image: true,
+            kt_name: true,
+            kt_type: true,
+            detail: true
+        }
+    })
+
+    if (!ktData) {
+        return res.send({ status: `This product is not found` })
+    }
+    return res.send({ data: ktData })
+})
+
 router.delete("/delete/:id", async (req, res) => {
     let ktId = Number(req.params.id)
 
