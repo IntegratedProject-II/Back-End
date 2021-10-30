@@ -9,7 +9,7 @@ const person = new PrismaClient().person
 const personRole = new PrismaClient().person_role
 const tk = new PrismaClient().token
 
-router.get("/getPerson", async (req, res) => {
+router.get("/getPerson", verifyToken, async (req, res) => {
     let result = await person.findMany()
     if (result == undefined || result.length < 0) {
         return res.status(400).send({ status: "Don't have any data" })
@@ -66,15 +66,6 @@ router.post("/signin", async (req, res) => {
     let { username, password } = req.body
 
     username = username.toLowerCase()
-
-    let role_id = await person.findFirst({
-        where: {
-            username: username
-        },
-        select: {
-            role_id: true
-        }
-    })
     
     let findedUser = await person.findFirst({
         where: {
@@ -91,20 +82,20 @@ router.post("/signin", async (req, res) => {
     if (!validPassword) {
         return res.status(401).send({ msg: "Invalid Password" })
     }
-
-    const token = jwt.sign({ id: findedUser.user_id }, process.env.TOKEN, { expiresIn: "5m" })
-    return res.header("pj-token", token).send({ token: token, role: role_id})
+    delete findedUser.password
+    const token = jwt.sign(findedUser, process.env.TOKEN, { expiresIn: "5m" })
+    return res.header("pj-token", token).send({ token: token, role: findedUser.role_id})
 })
 
-// router.delete("/signout", async, (req, res) => {
-//     let signOut = await tk.deleteMany({
-//         where: {
-//             token: req.token
-//         }
-//     })
+router.delete("/signout", verifyToken, async (req, res) => {
+    let signOut = await tk.create({
+        data: {
+            token: req.token
+        }
+    })
 
-//     return res.status(200).send({ msg: "Sign out already!!" })
-// })
+    return res.status(200).send({ msg: "Sign out!!" })
+})
 
 router.put("/editProfile/:id", async (req, res) => {
     let personId = Number(req.params.id)
