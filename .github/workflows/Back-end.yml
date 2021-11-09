@@ -41,7 +41,7 @@ jobs:
       with: 
          host: ${{ secrets.HOST }}
          username: ${{ secrets.USERNAME }}
-         key: ${{ secrets.KEY }}
+         password: ${{ secrets.PASSWORD }}
          source: ./docker-compose.yml
          target: ./Docker-back-end
     
@@ -55,7 +55,7 @@ jobs:
         with:
          host: ${{ secrets.HOST }}
          username: ${{ secrets.USERNAME }}
-         key: ${{ secrets.KEY }}
+         password: ${{ secrets.PASSWORD }}
          script: |
            docker-compose -f Docker-back-end/docker-compose.yml down 
            docker pull ghcr.io/integratedproject-ii/back-end:main 
