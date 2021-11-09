@@ -43,7 +43,7 @@ jobs:
          username: ${{ secrets.USERNAME }}
          password: ${{ secrets.PASSWORD }}
          source: ./docker-compose.yml
-         target: ./Docker-back-end
+         target: ~/Docker-back-end
     
   deploy:
       needs: build
