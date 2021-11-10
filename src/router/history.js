@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require("express")
 const router = require('express').Router()
 const { PrismaClient } = require('@prisma/client')
+const uploadFile = require("../middlewares/uploadFile")
 const history = new PrismaClient().history
 
 router.get("/getHistory", async (req, res) => {
@@ -23,16 +24,29 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
 })
 
-router.post("/addHistory", async (req, res) => {
-    let { h_date, wish, p_id, kt_id, user_id } = req.body
+// router.post("/addHistory", uploadFile, async (req, res) => {
+//     const files = req.files
+//     for (let i = 0; i < files.length; i++) {
+//         const file = files[i];
+//         if (file.fieldname == "data") {
+//             let newHistory = await fs.readFile(file.path, { encoding: "utf-8" })
+//             await fs.unlink(file.path)
+//             body = JSON.parse(newPlace)
+//             if (!body) {
+//                 return res.status(400).send({ status: "Please add fill data" })
+//             }
 
-    if (!(h_date || wish || p_id || kt_id || user_id)) {
-        return res.send({ status: "Not have data" })
-    }
-    await history.createMany({
-        data: req.body
-    })
-    return res.send({ status: "Create success" })
-})
+//             body.p_image = imageName
+
+//             let result = await place.create({
+//                 data: body
+//             })
+
+//             console.log(result)
+//             return res.send({ status: `Upload sucessfully` })
+//         }
+
+//     }
+// })
 
 module.exports = router
