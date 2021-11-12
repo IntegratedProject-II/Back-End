@@ -63,7 +63,6 @@ model person {
   country     country     @relation(fields: [ct_id], references: [ct_id], onDelete: NoAction, onUpdate: NoAction)
   person_role person_role @relation(fields: [role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction)
   history     history[]
-  token       token[]
 
   @@index([ct_id], name: "person_country_fk")
   @@index([role_id], name: "person_person_role_fk")
@@ -80,6 +79,7 @@ model place {
   p_name     String?    @db.VarChar(100)
   p_image    String?    @db.VarChar(200)
   tp_id      Int
+  detail     String?    @db.VarChar(200)
   place_type place_type @relation(fields: [tp_id], references: [tp_id], onDelete: NoAction, onUpdate: NoAction)
   history    history[]
 
@@ -87,16 +87,13 @@ model place {
 }
 
 model place_type {
-  tp_id   Int     @id @default(autoincrement())
-  tp_name String? @db.VarChar(50)
-  place   place[]
+  tp_id    Int     @id @default(autoincrement())
+  tp_name  String? @db.VarChar(50)
+  tp_image String? @db.VarChar(200)
+  place    place[]
 }
 
 model token {
-  tk_id   Int     @id @default(autoincrement())
-  token   String? @db.VarChar(500)
-  user_id Int?
-  person  person? @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@index([user_id], name: "token_person_fk")
+  tk_id Int     @id @default(autoincrement())
+  token String? @db.VarChar(500)
 }
