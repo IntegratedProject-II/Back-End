@@ -13,7 +13,7 @@ router.get("/getPlace", async (req, res) => {
             return res.status(400).send({ status: "Don't have any data" })
         }
         return res.send({ data: result })
-})
+}) 
 
 router.delete("/delete/:id", async (req, res) => {
     let placeId = Number(req.params.id)
@@ -73,42 +73,6 @@ router.post("/addPlace", uploadFile, async (req, res) => {
 
     }
 })
-
-// router.put("/editPlace/:id", async (req, res) => {
-//     let placeId = Number(req.params.id)
-//     let { p_name, p_image, tp_id } = req.body
-
-//    let result = await place.findUnique({
-//         where: {
-//             p_id: placeId
-//         }
-//     })
-
-//     if (!(result)) {
-//         return res.status(404).send(`id ${placeId} Can't find your place id`)
-//     } 
-
-//     if (!(result.p_name)) {
-//         return res.status(404).send(`id ${placeId} Not have this place name`)
-//     }
-
-//     let updatePlace = await place.update({
-//         where: {
-//             p_id: placeId
-//         },
-//         data: {
-//             p_name: p_name,
-//             p_image: p_image,
-//             tp_id: tp_id
-//         }
-//     })
-
-//     return res.send({
-//         msg: `Update sucessfully`,
-//         data: updatePlace
-//     })
-
-// })
 
 router.put("/editPlace/:id", uploadFile, async (req, res) => {
     let placeId = Number(req.params.id)
