@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const verifyToken = require('./middlewares/auth')
 const app = express()
 
 app.use(cors())
@@ -20,4 +21,5 @@ app.use('/api/country', require("./router/country"))
 app.use('/api/krathongType', require("./router/krathongType"))
 app.use('/api/placeType', require("./router/placeType"))
 app.use('/api/image', require("./router/image"))
+app.use('/api/token',verifyToken, require("./router/token"))
 // app.use('/api/token', require("./router/token"))

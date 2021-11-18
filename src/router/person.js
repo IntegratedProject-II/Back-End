@@ -72,6 +72,15 @@ router.post("/register", async (req, res) => {
     }
 })
 
+router.get("/checkToken", async (req, res) => {
+    try {
+        
+    } catch(err) {
+        res.status(500)
+        return res.send("An error occurred")
+    }
+})
+
 router.post("/signin", async (req, res) => {
     try {
         let { username, password } = req.body
