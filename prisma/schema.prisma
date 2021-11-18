@@ -78,7 +78,7 @@ model place {
   p_id       Int        @id @default(autoincrement())
   p_name     String?    @db.VarChar(100)
   tp_id      Int
-  detail     String?    @db.VarChar(4000)
+  detail     String?    @db.VarChar(1000)
   p_image    String?    @db.VarChar(200)
   place_type place_type @relation(fields: [tp_id], references: [tp_id], onDelete: NoAction, onUpdate: NoAction)
   history    history[]

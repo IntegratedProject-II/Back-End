@@ -15,6 +15,28 @@ router.get("/getPlaceType", async (req, res) => {
         return res.send({ data: result })
 })
 
+router.get("/getPlaceType/:id", async (req, res) => {
+    let tpId = Number(req.params.id) 
+    if (tpId == undefined) {
+        return res.status(400).send({ status: "Don't have any data" })
+    }
+
+    let tpData = await place_type.findUnique({
+        where: {
+            tp_id: tpId
+        },
+        select: {
+            tp_name: true,
+            tp_image: true
+        }
+    })
+
+    if (!tpData) {
+        return res.send({ status: `This place is not found` })
+    }
+    return res.send({ data: tpData })
+})
+
 router.post("/addPlaceType", uploadFile, async (req, res) => {
     const files = req.files
     let imageFiles = []
