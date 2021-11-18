@@ -20,6 +20,35 @@ router.get("/getPlace", async (req, res) => {
     }
 })
 
+router.get("/getPlace/:id", async (req, res) => {
+    try {
+        let placeId = Number(req.params.id)
+        if (placeId == undefined) {
+            return res.status(400).send({ status: "Don't have any data" })
+        }
+
+        let placeData = await place.findUnique({
+            where: {
+                p_id: placeId
+            },
+            select: {
+                p_name: true,
+                tp_id: true,
+                detail: true,
+                p_image: true
+            }
+        })
+
+        if (!placeData) {
+            return res.send({ status: `This place is not found` })
+        }
+        return res.send({ data: placeData })
+    } catch (err) {
+        res.status(500)
+        return res.send("An error occurred")
+    }
+})
+
 router.delete("/delete/:id", async (req, res) => {
     try {
         let placeId = Number(req.params.id)
