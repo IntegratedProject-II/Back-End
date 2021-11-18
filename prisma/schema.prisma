@@ -75,13 +75,13 @@ model person_role {
 }
 
 model place {
-  p_id        Int        @id @default(autoincrement())
-  p_name      String?    @db.VarChar(100)
-  p_image     String?    @db.VarChar(200)
-  tp_id       Int
-  detail      String?    @db.VarChar(200)
-  place_type  place_type @relation(fields: [tp_id], references: [tp_id], onDelete: NoAction, onUpdate: NoAction)
-  history     history[]
+  p_id       Int        @id @default(autoincrement())
+  p_name     String?    @db.VarChar(100)
+  tp_id      Int
+  detail     String?    @db.VarChar(4000)
+  p_image    String?    @db.VarChar(200)
+  place_type place_type @relation(fields: [tp_id], references: [tp_id], onDelete: NoAction, onUpdate: NoAction)
+  history    history[]
 
   @@index([tp_id], name: "place_place_type_fk")
 }
