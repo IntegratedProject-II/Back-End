@@ -117,7 +117,7 @@ router.post("/addKrathong", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 

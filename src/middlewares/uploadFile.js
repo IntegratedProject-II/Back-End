@@ -38,7 +38,8 @@ const upload = multer({
 module.exports = (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
-      throw err
+      res.status(500)
+      return res.send({ err: err.message })
     }
     if (!req.files) {
       console.log(req.files)
