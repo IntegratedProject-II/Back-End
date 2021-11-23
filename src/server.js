@@ -4,6 +4,7 @@ const verifyToken = require('./middlewares/auth')
 const app = express()
 
 app.use(cors())
+app.options('*',cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
@@ -12,12 +13,12 @@ app.listen(port, () => {
     console.log(`Server running on port: ${port}`)
 })
 
-app.use((req,res,next)=>{
-    res.header('Access-Control-Allow-Origin',"https://www.loykrathong.tech/")
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-    res.header('Access-Control-Allow-Methods',"GET, POST, PUT, DELETE")
-    next();
-})
+// app.use((req,res,next)=>{
+//     res.header('Access-Control-Allow-Origin',"https://www.loykrathong.tech/")
+//     res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+//     res.header('Access-Control-Allow-Methods',"GET, POST, PUT, DELETE")
+//     next();
+// })
 
 app.use('/api/krathong', require("./router/krathong"))
 app.use('/api/person', require("./router/person"))
