@@ -7,9 +7,15 @@ const bcrypt = require('bcrypt')
 const verifyToken = require("../middlewares/auth")
 const person = new PrismaClient().person
 
-router.get("/check", async (req,res) => {
-    console.log(req.person)
-    return res.send({msg: "welcome" ,user:req.person })
+
+router.get("/check", verifyToken, async (req,res) => {
+    try {
+    console.log(req.user)
+    res.send({msg: "welcome" ,user:req.user })
+    } catch(err) {
+        res.status(500)
+        return res.send({err: err.message})
+    }
 })
 
 module.exports = router
