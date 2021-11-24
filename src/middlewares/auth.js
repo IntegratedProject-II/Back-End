@@ -18,11 +18,12 @@ const verifyToken = async (req, res, next) => {
     }
     try {
         const decoded = jwt.verify(token, process.env.TOKEN)
-        let findedUser = await person.findFirst({
-            where:{
-                user_id: decoded.user_id
-            }
-        })
+        // let findedUser = await person.findFirst({
+        //     where:{
+        //         user_id: decoded.user_id
+        //     }
+        // })
+        // delete findedUser.password
         req.token = token 
         req.user = decoded
     } catch(error){
