@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client')
 const uploadFile = require("../middlewares/uploadFile")
 const fs = require("fs/promises")
 const history = new PrismaClient().history
-const person = new PrismaClient().person
+const place = new PrismaClient().place
 
 router.get("/getHistory/:userId", async (req, res) => {
     try {
@@ -14,21 +14,19 @@ router.get("/getHistory/:userId", async (req, res) => {
             where: {
                 user_id: userId
             },
-            select: {
-                h_date: true,
-                wish: true,
-                kt_id: true,
-                p_id: true,
-                user_id: true
+            include: {
+                place: true
             }
         })
+
         if (result == undefined || result.length < 0) {
             return res.status(400).send({ status: "Don't have any data" })
         }
         return res.send({ data: result })
+
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({ err: err.message })
     }
 })
 
