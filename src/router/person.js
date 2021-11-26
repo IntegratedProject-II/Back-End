@@ -103,7 +103,7 @@ router.post("/signin", async (req, res) => {
             return res.status(401).send({ msg: "Invalid Password" })
         }
         delete findedUser.password
-        const token = jwt.sign(findedUser, process.env.TOKEN, { expiresIn: "30m" })
+        const token = jwt.sign(findedUser, process.env.TOKEN, { expiresIn: "30m" }) 
         return res.header("pj-token", token).send({ token: token, role: findedUser.role_id, userId: findedUser.user_id })
     } catch (err) {
         res.status(500)

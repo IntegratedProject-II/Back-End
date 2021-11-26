@@ -48,26 +48,44 @@ router.delete("/delete/:id", async (req, res) => {
     }
 })
 
-router.post("/addHistory", uploadFile, async (req, res) => {
+router.post("/addHistory", async (req, res) => {
     try {
-        const files = req.files
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file.fieldname == "data") {
-                let newHistory = await fs.readFile(file.path, { encoding: "utf-8" })
-                await fs.unlink(file.path)
-                body = JSON.parse(newHistory)
-                if (!body) {
-                    return res.status(400).send({ status: "Please add fill data" })
-                }
-                let result = await history.create({
-                    data: body
-                })
+        // const files = req.files
+        // for (let i = 0; i < files.length; i++) {
+        //     const file = files[i];
+        //     if (file.fieldname == "data") {
+        //         let newHistory = await fs.readFile(file.path, { encoding: "utf-8" })
+        //         await fs.unlink(file.path)
+        //         body = JSON.parse(newHistory)
+        //         if (!body) {
+        //             return res.status(400).send({ status: "Please add fill data" })
+        //         }
+        //         let result = await history.create({
+        //             data: body
+        //         })
 
-                console.log(result)
-                return res.send({ status: `Upload sucessfully` })
-            }
+        //         console.log(result)
+        //         return res.send({ status: `Upload sucessfully` })
+        //     }
+        // }
+
+        let { h_date, wish, kt_id, user_id, p_id } = req.body
+
+        if (!(h_date && wish && kt_id && user_id && p_id)) {
+            return res.status(400).send({ msg: "Please input information to fill" })
         }
+
+        let result = await history.create({
+            data: {
+                h_date: h_date,
+                wish: wish,
+                kt_id: kt_id,
+                user_id: user_id,
+                p_id: p_id
+            }
+        })
+
+        return res.send({ msg: "Create History Successfully", data: result })
     } catch (err) {
         res.status(500)
         return res.send("An error occurred")
