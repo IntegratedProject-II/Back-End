@@ -32,12 +32,48 @@ router.post("/register", async (req, res) => {
             }
         }
 
-        // } else if (role_id == 2) {
-        //     if (!(fname && lname && username && password && email && id_card && phone && role_id && ct_id)) {
-        //         return res.status(400).send({ msg: "Please input information to fill" })
-        //     }
-        // }
+        username = username.toLowerCase()
 
+        let findedUser = await person.findFirst({
+            where: {
+                username: username
+            }
+        })
+        if (findedUser) {
+            return res.status(403).send({ msg: "Username is already exists" })
+        }
+
+        const saltRound = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, saltRound)
+
+        let result = await person.create({
+            data: {
+                fname: fname,
+                lname: lname,
+                email: email,
+                username: username,
+                password: hashedPassword,
+                role_id: role_id,
+                ct_id: ct_id
+            }
+        })
+
+        return res.send({ msg: "Create User Successfully", data: result })
+    } catch (err) {
+        res.status(500)
+        return res.send("An error occurred")
+    }
+})
+
+router.post("/registerAdmin", async (req, res) => {
+    try {
+        let { fname, lname, username, password, email, phone, id_card, role_id, ct_id } = req.body
+
+        if (role_id == 2) {
+            if (!(fname && lname && username && password && email && id_card && phone && role_id && ct_id)) {
+                return res.status(400).send({ msg: "Please input information to fill" })
+            }
+        }
 
         username = username.toLowerCase()
 
@@ -60,6 +96,8 @@ router.post("/register", async (req, res) => {
                 email: email,
                 username: username,
                 password: hashedPassword,
+                phone: phone,
+                id_card: id_card,
                 role_id: role_id,
                 ct_id: ct_id
             }
