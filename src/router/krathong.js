@@ -36,7 +36,8 @@ router.get("/getKrathong/:id", async (req, res) => {
                 kt_image: true,
                 kt_name: true,
                 kt_type: true,
-                detail: true
+                detail: true,
+                amount: true
             }
         })
 
@@ -135,17 +136,15 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                 imageName = imageFiles[i].filename
             }
             if (file.fieldname == "data") {
-                let findImage = await kt.findUnique({
+                let findKrathong = await kt.findFirst({
                     where: {
                         kt_id: ktId
                     },
                     select: {
-                        kt_image: true
+                        kt_image: true,
+                        t_id: true
                     }
                 })
-
-                let imagePath = path.join(__dirname, `../../uploads/${findImage.kt_image}`)
-                await fs.unlink(imagePath)
 
                 let editKrathong = await fs.readFile(file.path, { encoding: "utf-8" })
 
@@ -156,6 +155,7 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                 }
 
                 body.kt_image = imageName
+                body.t_id = findKrathong.t_id
 
                 let updateKrathong = await kt.update({
                     where: {
@@ -163,6 +163,8 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                     },
                     data: body
                 })
+                let imagePath = path.join(__dirname, `../../uploads/${findKrathong.kt_image}`)
+                await fs.unlink(imagePath)
 
                 return res.send({ status: `Update sucessfully`, data: updateKrathong })
             }
