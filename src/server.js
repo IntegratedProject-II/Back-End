@@ -3,8 +3,8 @@ const cors = require('cors')
 const verifyToken = require('./middlewares/auth')
 const app = express()
 
-// app.use(cors())
-// app.options('*',cors())
+app.use(cors())
+app.options('*',cors())
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
