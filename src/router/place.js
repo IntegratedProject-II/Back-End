@@ -16,7 +16,7 @@ router.get("/getPlace", async (req, res) => {
         return res.send({ data: result })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -45,7 +45,7 @@ router.get("/getPlace/:id", async (req, res) => {
         return res.send({ data: placeData })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -78,7 +78,7 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -113,7 +113,7 @@ router.post("/addPlace", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -165,7 +165,7 @@ router.put("/editPlace/:id", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 

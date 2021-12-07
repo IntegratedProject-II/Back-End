@@ -30,10 +30,11 @@ router.get("/krathongImage/:id", async (req, res) => {
         }
 
         const fileDir = path.join(__dirname, `../../uploads/${ktImage.kt_image}`)
+
         res.sendFile(fileDir)
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -61,7 +62,7 @@ router.get("/placeImage/:id", async (req, res) => {
         res.sendFile(fileDir)
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -89,7 +90,7 @@ router.get("/placeTypeImage/:id", async (req, res) => {
         res.sendFile(fileDir)
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 

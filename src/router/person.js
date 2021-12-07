@@ -18,7 +18,7 @@ router.get("/getPerson", verifyToken, async (req, res) => {
         return res.send({ data: result })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -61,7 +61,7 @@ router.post("/register", async (req, res) => {
         return res.send({ msg: "Create User Successfully", data: result })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -106,16 +106,7 @@ router.post("/registerAdmin", async (req, res) => {
         return res.send({ msg: "Create User Successfully", data: result })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
-    }
-})
-
-router.get("/checkToken", async (req, res) => {
-    try {
-        
-    } catch(err) {
-        res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -145,7 +136,7 @@ router.post("/signin", async (req, res) => {
         return res.header("pj-token", token).send({ token: token, role: findedUser.role_id, userId: findedUser.user_id })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -160,7 +151,7 @@ router.delete("/signout", verifyToken, async (req, res) => {
         return res.status(200).send({ msg: "Sign out!!" })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -227,7 +218,7 @@ router.put("/editProfile/:id", async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 

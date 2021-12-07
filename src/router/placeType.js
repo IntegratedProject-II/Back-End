@@ -13,10 +13,10 @@ router.get("/getPlaceType", async (req, res) => {
         if (result == undefined || result.length < 0) {
             return res.status(400).send({ status: "Don't have any data" })
         }
-        return res.send({ data: result })
+        return res.send({ data: result }) 
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -43,7 +43,7 @@ router.get("/getPlaceType/:id", async (req, res) => {
         return res.send({ data: tpData })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -78,7 +78,7 @@ router.post("/addPlaceType", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -111,7 +111,7 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -163,7 +163,7 @@ router.put("/editPlaceType/:id", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
