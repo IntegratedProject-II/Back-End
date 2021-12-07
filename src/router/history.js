@@ -5,7 +5,20 @@ const { PrismaClient } = require('@prisma/client')
 const uploadFile = require("../middlewares/uploadFile")
 const fs = require("fs/promises")
 const history = new PrismaClient().history
-const place = new PrismaClient().place
+// const place = new PrismaClient().place
+
+router.get("/history", async (req, res) => {
+    try {
+        let result = await history.findMany()
+        if (result == undefined || result.length < 0) {
+            return res.status(400).send({ status: "Don't have any data" })
+        }
+        return res.send({ data: result })
+    } catch (err) {
+        res.status(500)
+        return res.send({err: err.message})
+    }
+})
 
 router.get("/getHistory/:userId", async (req, res) => {
     try {
@@ -42,7 +55,7 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 
@@ -67,7 +80,7 @@ router.post("/addHistory", async (req, res) => {
         return res.send({ msg: "Create History Successfully", data: result })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 

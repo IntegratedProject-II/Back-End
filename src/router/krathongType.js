@@ -13,7 +13,7 @@ router.get("/getType", async (req, res) => {
         return res.send({ data: result })
     } catch(err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({err: err.message})
     }
 })
 

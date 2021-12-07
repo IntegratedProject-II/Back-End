@@ -6,6 +6,7 @@ const uploadFile = require("../middlewares/uploadFile")
 const path = require("path")
 const fs = require("fs/promises")
 const kt = new PrismaClient().krathong
+const history = new PrismaClient().history
 
 router.get("/getKrathong", async (req, res) => {
     try {
@@ -16,7 +17,7 @@ router.get("/getKrathong", async (req, res) => {
         return res.send({ data: result })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({ err: err.message })
     }
 })
 
@@ -45,7 +46,7 @@ router.get("/getKrathong/:id", async (req, res) => {
         return res.send({ data: ktData })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({ err: err.message })
     }
 })
 
@@ -76,17 +77,16 @@ router.delete("/delete/:id", async (req, res) => {
         if (!result) {
             return res.send({ status: "Can't find your krathong" })
         }
-        // console.log(result)
+
         return res.send({ status: "Delete Successful" })
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({ err: err.message })
     }
 })
 
 router.post("/addKrathong", uploadFile, async (req, res) => {
     try {
-        //let { kt_name, amount, kt_image, detail, t_id } = req.body
         const files = req.files
         let imageFiles = []
         let imageName;
@@ -117,14 +117,13 @@ router.post("/addKrathong", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send({err: err.message})
+        return res.send({ err: err.message })
     }
 })
 
 router.put("/editKrathong/:id", uploadFile, async (req, res) => {
     try {
         let ktId = Number(req.params.id)
-        // let { kt_name, amount, kt_image, detail, t_id } = req.body
 
         const files = req.files
         let imageFiles = []
@@ -170,8 +169,43 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send("An error occurred")
+        return res.send({ err: err.message })
     }
 })
+
+// router.put("/count/:id", async (req, res) => {
+//     try {
+//         let ktId = Number(req.params.id)
+//         const ct = await kt.findUnique({
+//             where: {
+//                 kt_id: ktId
+//             },
+//             select: {
+//                 amount: true
+//             }
+//         })
+
+//         for (let i = 0; i < ct.amount; i++) {
+//             const counting = ct - 1
+
+//             let updateKrathong = await kt.update({
+//                 where: {
+//                     kt_id: ktId
+//                 },
+//                 data: {
+//                     amount: counting,
+//                     kt_image: null,
+//                     kt_name: null,
+//                     kt_type: null,
+//                     detail: null
+//                 }
+//             })
+//             return res.send({ status: `Update sucessfully`, data: updateKrathong })
+//         }
+//     } catch (err) {
+//         res.status(500)
+//         return res.send({ err: err.message })
+//     }
+// })
 
 module.exports = router
