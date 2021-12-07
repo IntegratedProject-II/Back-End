@@ -36,7 +36,8 @@ router.get("/getKrathong/:id", async (req, res) => {
                 kt_image: true,
                 kt_name: true,
                 kt_type: true,
-                detail: true
+                detail: true,
+                amount: true
             }
         })
 
