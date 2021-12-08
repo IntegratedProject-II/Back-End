@@ -175,7 +175,7 @@ router.put("/editPlace/:id", uploadFile, async (req, res) => {
                     return res.status(400).send({ status: "Please add data" })
                 }
 
-                body.p_image = findImage.p_image
+                body.p_image = imageName
                 body.tp_id = findImage.tp_id
 
                 let updatePlace = await place.update({
