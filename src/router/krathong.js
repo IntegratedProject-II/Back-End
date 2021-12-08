@@ -129,11 +129,36 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
         const files = req.files
         let imageFiles = []
         let imageName;
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             if (file.fieldname == "image") {
-                imageFiles.push(file)
-                imageName = imageFiles[i].filename
+                if (files) {
+                    imageFiles.push(file)
+                    imageName = imageFiles[i].filename
+                    let oldImg = await kt.findUnique({
+                        where: {
+                            kt_id: ktId
+                        },
+                        select: {
+                            kt_image: true
+                        }
+                    })
+                    if (!oldImg) {
+                        return res.status(400).send({ status: "Not found image" })
+                    }
+                    let imagePath = path.join(__dirname, `../../uploads/${oldImg.kt_image}`)
+                    await fs.unlink(imagePath)
+                } else {
+                    ktImage = await kt.findUnique({
+                        where: {
+                            kt_id: placeId
+                        },
+                        select: {
+                            kt_image: true
+                        }
+                    })
+                }
             }
             if (file.fieldname == "data") {
                 let findKrathong = await kt.findFirst({
@@ -154,7 +179,7 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                     return res.status(400).send({ status: "Please add data" })
                 }
 
-                body.kt_image = imageName
+                body.kt_image = findKrathong.kt_image
                 body.t_id = findKrathong.t_id
 
                 let updateKrathong = await kt.update({
@@ -163,13 +188,12 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                     },
                     data: body
                 })
-                let imagePath = path.join(__dirname, `../../uploads/${findKrathong.kt_image}`)
-                await fs.unlink(imagePath)
 
                 return res.send({ status: `Update sucessfully`, data: updateKrathong })
             }
         }
     } catch (err) {
+        console.log(err)
         res.status(500)
         return res.send({ err: err.message })
     }
