@@ -16,7 +16,7 @@ router.get("/getPlace", async (req, res) => {
         return res.send({ data: result })
     } catch (err) {
         res.status(500)
-        return res.send({err: err.message})
+        return res.send({ err: err.message })
     }
 })
 
@@ -46,7 +46,7 @@ router.get("/getPlace/:id", async (req, res) => {
         return res.send({ data: placeData })
     } catch (err) {
         res.status(500)
-        return res.send({err: err.message})
+        return res.send({ err: err.message })
     }
 })
 
@@ -79,7 +79,7 @@ router.delete("/delete/:id", async (req, res) => {
         return res.send({ status: "Delete Successful" })
     } catch (err) {
         res.status(500)
-        return res.send({err: err.message})
+        return res.send({ err: err.message })
     }
 })
 
@@ -114,7 +114,7 @@ router.post("/addPlace", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send({err: err.message})
+        return res.send({ err: err.message })
     }
 })
 
@@ -125,34 +125,58 @@ router.put("/editPlace/:id", uploadFile, async (req, res) => {
         const files = req.files
         let imageFiles = []
         let imageName;
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             if (file.fieldname == "image") {
-                imageFiles.push(file)
-                imageName = imageFiles[i].filename
+                if (files) {
+                    imageFiles.push(file)
+                    imageName = imageFiles[i].filename
+                    let oldImg = await place.findUnique({
+                        where: {
+                            p_id: placeId
+                        },
+                        select: {
+                            p_image: true
+                        }
+                    })
+                    if(!oldImg){
+                        return res.status(400).send({status: "Not found image"})
+                    }
+                    let imagePath = path.join(__dirname, `../../uploads/${oldImg.p_image}`)
+                    await fs.unlink(imagePath)
+                }else{
+                    placeImage = await place.findUnique({
+                        where: {
+                            p_id: placeId
+                        },
+                        select: {
+                            p_image: true
+                        }
+                    })
+                }
             }
             if (file.fieldname == "data") {
-                let findImage = await place.findUnique({
+                let findImage = await place.findFirst({
                     where: {
                         p_id: placeId
                     },
                     select: {
-                        p_image: true
+                        p_image: true,
+                        tp_id: true
                     }
                 })
-
-                let imagePath = path.join(__dirname, `../../uploads/${findImage.p_image}`)
-                await fs.unlink(imagePath)
-
-                let editPlace = await fs.readFile(file.path, { encoding: "utf-8" })
-
-                await fs.unlink(file.path)
+                let editPlace = await fs.readFile(file.path, {
+                    encoding: "utf-8"
+                })
                 body = JSON.parse(editPlace)
+                await fs.unlink(file.path)
                 if (!body) {
                     return res.status(400).send({ status: "Please add data" })
                 }
 
-                body.p_image = imageName
+                body.p_image = findImage.p_image
+                body.tp_id = findImage.tp_id
 
                 let updatePlace = await place.update({
                     where: {
@@ -166,7 +190,7 @@ router.put("/editPlace/:id", uploadFile, async (req, res) => {
         }
     } catch (err) {
         res.status(500)
-        return res.send({err: err.message})
+        return res.send({ err: err.message })
     }
 })
 
