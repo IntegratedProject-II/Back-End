@@ -179,7 +179,7 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                     return res.status(400).send({ status: "Please add data" })
                 }
 
-                body.kt_image = findKrathong.kt_image
+                body.kt_image = imageName
                 body.t_id = findKrathong.t_id
 
                 let updateKrathong = await kt.update({
