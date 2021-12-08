@@ -35,7 +35,8 @@ router.get("/getPlace/:id", async (req, res) => {
                 p_name: true,
                 tp_id: true,
                 detail: true,
-                p_image: true
+                p_image: true,
+                place_type: true
             }
         })
 
