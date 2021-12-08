@@ -118,6 +118,7 @@ router.post("/addPlace", uploadFile, async (req, res) => {
     }
 })
 
+//edit
 router.put("/editPlace/:id", uploadFile, async (req, res) => {
     try {
         let placeId = Number(req.params.id)
