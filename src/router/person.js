@@ -155,6 +155,26 @@ router.delete("/signout", verifyToken, async (req, res) => {
     }
 })
 
+router.delete("/deleteAccount/:id", async (req, res) => {
+    try {
+        let accountId = Number(req.params.id)
+
+        let results = await person.delete({
+            where: {
+                user_id: accountId
+            }
+        })
+
+        if (!results) {
+            return res.status(200).send({ msg: "This account not found" })
+        }
+        return res.status(200).send({ msg: "Delete Success" })
+    } catch(err) {
+        res.status(500)
+        return res.send({err: err.message})
+    }
+})
+
 router.put("/editProfile/:id", async (req, res) => {
     try {
         let personId = Number(req.params.id)
