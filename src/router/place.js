@@ -142,7 +142,7 @@ router.put("/editPlace/:id", uploadFile, async (req, res) => {
                         }
                     })
                     if(!oldImg){
-                        return res.status(400).send({status: "Not found image"})
+                        return res.status(404).send({status: "Not found image"})
                     }
                     let imagePath = path.join(__dirname, `../../uploads/${oldImg.p_image}`)
                     await fs.unlink(imagePath)

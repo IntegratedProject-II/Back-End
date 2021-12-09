@@ -145,7 +145,7 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
                         }
                     })
                     if (!oldImg) {
-                        return res.status(400).send({ status: "Not found image" })
+                        return res.status(404).send({ status: "Not found image" })
                     }
                     let imagePath = path.join(__dirname, `../../uploads/${oldImg.kt_image}`)
                     await fs.unlink(imagePath)
@@ -198,40 +198,5 @@ router.put("/editKrathong/:id", uploadFile, async (req, res) => {
         return res.send({ err: err.message })
     }
 })
-
-// router.put("/count/:id", async (req, res) => {
-//     try {
-//         let ktId = Number(req.params.id)
-//         const ct = await kt.findUnique({
-//             where: {
-//                 kt_id: ktId
-//             },
-//             select: {
-//                 amount: true
-//             }
-//         })
-
-//         for (let i = 0; i < ct.amount; i++) {
-//             const counting = ct - 1
-
-//             let updateKrathong = await kt.update({
-//                 where: {
-//                     kt_id: ktId
-//                 },
-//                 data: {
-//                     amount: counting,
-//                     kt_image: null,
-//                     kt_name: null,
-//                     kt_type: null,
-//                     detail: null
-//                 }
-//             })
-//             return res.send({ status: `Update sucessfully`, data: updateKrathong })
-//         }
-//     } catch (err) {
-//         res.status(500)
-//         return res.send({ err: err.message })
-//     }
-// })
 
 module.exports = router
